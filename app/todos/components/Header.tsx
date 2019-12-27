@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Alert, StyleSheet, View} from 'react-native';
 import {
   Button,
   Dialog,
+  HelperText,
   Paragraph,
   Portal,
   Text,
@@ -13,7 +14,12 @@ import {ITodoModel} from '../todo-model';
 
 const Header: React.FC<any> = ({text, updateList}) => {
   const [visible, setVisible] = useState<boolean>(false);
-  const [todo, setTodo] = useState<ITodoModel>({} as ITodoModel);
+  const [todo, setTodo] = useState<ITodoModel>({
+    title: '',
+    description: '',
+  } as ITodoModel);
+  const [createLoading, setCreateLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
   const handleTitleChange = (input: string) => {
     const newTodo = {...todo};
@@ -28,10 +34,21 @@ const Header: React.FC<any> = ({text, updateList}) => {
   };
 
   const handleCreateTodoFromDialog = async () => {
-    const {data} = await postTodo(todo);
-    updateList(data);
-    setVisible(false);
-    setTodo({} as ITodoModel);
+    if (todo.title.length === 0 || todo.description.length === 0) {
+      setError('Title and description are required.');
+      return;
+    }
+
+    setCreateLoading(true);
+    try {
+      const {data} = await postTodo(todo);
+      updateList(data);
+      setTodo({} as ITodoModel);
+      setVisible(false);
+    } catch (err) {
+      setError(err.message);
+    }
+    setCreateLoading(false);
   };
 
   return (
@@ -53,24 +70,28 @@ const Header: React.FC<any> = ({text, updateList}) => {
             <Paragraph>Adding a new todo so you can use it later.</Paragraph>
             <View style={styles.divider} />
             <TextInput
+              mode={'outlined'}
               label="title"
-              onChangeText={handleTitleChange}></TextInput>
+              onChangeText={handleTitleChange}
+            />
             <View style={styles.divider} />
             <TextInput
+              mode={'outlined'}
               label="description"
               multiline={true}
               numberOfLines={4}
-              onChangeText={handleDescriptionChange}></TextInput>
+              onChangeText={handleDescriptionChange}
+            />
+            <HelperText type="error">{error}</HelperText>
           </Dialog.Content>
 
           <Dialog.Actions>
+            <Button onPress={() => setVisible(false)}>Cancel</Button>
             <Button
-              onPress={async () => {
-                setVisible(false);
-              }}>
-              Cancel
+              loading={createLoading}
+              onPress={() => handleCreateTodoFromDialog()}>
+              Add
             </Button>
-            <Button onPress={() => handleCreateTodoFromDialog()}>Add</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

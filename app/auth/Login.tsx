@@ -25,21 +25,17 @@ const Login: React.FC<any> = props => {
 
       <>
         <View style={styles.divider} />
-        <TextInput onChange={() => {}} label="*Username or email"></TextInput>
+        <TextInput onChange={() => {}} label="*Username or email" />
       </>
 
       <>
         <View style={styles.divider} />
-        <TextInput
-          onChange={() => {}}
-          label="*Password"
-          secureTextEntry></TextInput>
+        <TextInput onChange={() => {}} label="*Password" secureTextEntry />
       </>
 
       <>
         <View style={styles.divider} />
         <Button
-          loading
           disabled={false}
           style={styles.btn}
           mode="contained"

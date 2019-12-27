@@ -1,16 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, Alert} from 'react-native';
-import {ActivityIndicator, Button, Divider} from 'react-native-paper';
-import {FlatList} from 'react-native-gesture-handler';
+import {View, StyleSheet, Alert} from 'react-native';
+import {ActivityIndicator, Divider, HelperText} from 'react-native-paper';
 import Header from '../components/Header';
 import TodoView from '../components/TodoView';
 import {getTodos} from '../todo-service';
 import {ITodoModel} from '../todo-model';
 
-const TodoList: React.FC<any> = props => {
+const TodoList: React.FC<void> = () => {
   const [data, setData] = useState<ITodoModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [error, setError] = useState<string>('');
   useEffect(() => {
     fetch();
   }, []);
@@ -26,7 +25,9 @@ const TodoList: React.FC<any> = props => {
             : 1,
       );
       setData(sortedData);
-    } catch (e) {}
+    } catch (e) {
+      setError(e.message);
+    }
     setLoading(false);
   };
 
@@ -35,12 +36,8 @@ const TodoList: React.FC<any> = props => {
   };
 
   const handleUpdateList = (value: ITodoModel) => {
-    // let newData = data.filter(item => item.id !== value.id);
-    // setData([value, ...newData]);
-    const index = data.findIndex(i => i.id == value.id);
-    let newData = data;
-    newData[index] = value;
-    setData(newData);
+    const newData = data.filter(item => item.id !== value.id);
+    setData([value, ...newData]);
   };
 
   const handleDeleteFromList = (value: string) => {
@@ -54,41 +51,24 @@ const TodoList: React.FC<any> = props => {
           <ActivityIndicator animating size="large" />
         </View>
       ) : (
-        // <FlatList
-        //   extraData={data}
-        //   data={data}
-        //   keyExtractor={(item, index) => index.toString()}
-        //   style={styles.base}
-        //   ItemSeparatorComponent={() => <Divider />}
-        //   ListHeaderComponent={() => <Header updateList={handleAddToList} />}
-        //   renderItem={({item, index}) => (
-        //     <TodoView
-        //       removeTodoFromList={handleDeleteFromList}
-        //       updateList={handleUpdateList}
-        //       item={item}
-        //       key={index}
-        //     />
-        //   )}
-        // />
-        <View>
+        <View style={styles.base}>
           <Header updateList={handleAddToList} />
+          <Divider />
           {data.map(i => (
-            <View>
+            <View key={i.id}>
               <TodoView
                 removeTodoFromList={handleDeleteFromList}
                 updateList={handleUpdateList}
                 item={i}
-                key={i.id}
               />
-              <Button onPress={() => {}}>Check</Button>
             </View>
           ))}
+          <HelperText type="error">{error}</HelperText>
         </View>
       )}
     </>
   );
 };
-
 export default TodoList;
 
 const styles = StyleSheet.create({

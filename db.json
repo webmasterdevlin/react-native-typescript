@@ -1,40 +1,10 @@
 {
   "todos": [
     {
-      "id": "d3232",
-      "title": "My Title",
-      "description": "My desc",
-      "finished": true
-    },
-    {
-      "title": "Yuy",
-      "description": "Iuddpp",
-      "id": "RZEbPow",
-      "finished": true
-    },
-    {
-      "title": "Oopp",
-      "description": "Op",
-      "id": "PHpv0a5",
-      "finished": false
-    },
-    {
-      "title": "Po",
-      "description": "Mm",
-      "id": "RHgDW-g",
-      "finished": true
-    },
-    {
-      "title": "RrrW",
-      "description": "Rp",
-      "id": "fZzd9a_",
-      "finished": true
-    },
-    {
-      "title": "Bb",
-      "description": "Bbp",
-      "id": "4KsYEOn",
-      "finished": true
+      "title": "Hi",
+      "description": "Hello",
+      "finished": true,
+      "id": "984gfuwe90q3rg9iahd08g3"
     }
   ]
 }
