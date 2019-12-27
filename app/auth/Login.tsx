@@ -47,10 +47,6 @@ const Login: React.FC<any> = props => {
       </>
 
       <>
-        {/**
-         * Use a portal component to render
-         * the snackbar on top of everything else
-         * */}
         <Portal>
           <Snackbar visible={false} onDismiss={() => {}}>
             Error

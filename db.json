@@ -1,10 +1,16 @@
 {
   "todos": [
     {
-      "title": "Hi",
-      "description": "Hello",
-      "finished": true,
-      "id": "984gfuwe90q3rg9iahd08g3"
+      "title": "Cook",
+      "description": "Cook steak",
+      "id": "GLGN0VP",
+      "finished": false
+    },
+    {
+      "title": "Pimp my Tesla",
+      "description": "Customize Tesla",
+      "id": "xBwkYid",
+      "finished": true
     }
   ]
 }

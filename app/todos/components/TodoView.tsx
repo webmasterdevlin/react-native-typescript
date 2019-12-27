@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {
   List,
@@ -20,7 +20,7 @@ interface IProps {
   updateList: (event: ITodoModel) => void;
 }
 
-const TodoView: React.FC<IProps> = ({item, removeTodoFromList, updateList}) => {
+const TodoView: FC<IProps> = ({item, removeTodoFromList, updateList}) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [todoForUpdate, setTodoForUpdate] = useState<ITodoModel>(
     {} as ITodoModel,
@@ -32,6 +32,18 @@ const TodoView: React.FC<IProps> = ({item, removeTodoFromList, updateList}) => {
   useEffect(() => {
     setTodoForUpdate(item);
   }, []);
+
+  const deleteTodoFromDialog = async () => {
+    setDeleteLoading(true);
+    try {
+      await deleteTodo(item.id);
+      removeTodoFromList(item.id);
+      setVisible(false);
+    } catch (e) {
+      setError(e.message);
+    }
+    setDeleteLoading(false);
+  };
 
   const handleTitleChange = (input: string) => {
     let todo: ITodoModel = {...todoForUpdate};
@@ -50,6 +62,14 @@ const TodoView: React.FC<IProps> = ({item, removeTodoFromList, updateList}) => {
   };
 
   const updateTodoFromDialog = async () => {
+    if (
+      todoForUpdate.title.length === 0 ||
+      todoForUpdate.description.length === 0
+    ) {
+      setError('Title and description are required.');
+      return;
+    }
+
     setUpdateLoading(true);
     try {
       await putTodo(todoForUpdate);
@@ -59,18 +79,6 @@ const TodoView: React.FC<IProps> = ({item, removeTodoFromList, updateList}) => {
       setError(error);
     }
     setUpdateLoading(false);
-  };
-
-  const deleteTodoFromDialog = async () => {
-    setDeleteLoading(true);
-    try {
-      await deleteTodo(item.id);
-      removeTodoFromList(item.id);
-      setVisible(false);
-    } catch (e) {
-      setError(e.message);
-    }
-    setDeleteLoading(false);
   };
 
   return (
@@ -106,7 +114,6 @@ const TodoView: React.FC<IProps> = ({item, removeTodoFromList, updateList}) => {
                 onChangeText={handleTitleChange}
               />
               <View style={styles.divider} />
-
               <TextInput
                 value={todoForUpdate.description}
                 multiline
@@ -129,7 +136,6 @@ const TodoView: React.FC<IProps> = ({item, removeTodoFromList, updateList}) => {
             </View>
             <HelperText type="error">{error}</HelperText>
           </Dialog.Content>
-
           <Dialog.Actions>
             <Button
               loading={deleteLoading}

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {
   Button,
@@ -12,7 +12,7 @@ import {
 import {postTodo} from '../todo-service';
 import {ITodoModel} from '../todo-model';
 
-const Header: React.FC<any> = ({text, updateList}) => {
+const Header: FC<any> = ({text, updateList}) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [todo, setTodo] = useState<ITodoModel>({
     title: '',
@@ -38,7 +38,6 @@ const Header: React.FC<any> = ({text, updateList}) => {
       setError('Title and description are required.');
       return;
     }
-
     setCreateLoading(true);
     try {
       const {data} = await postTodo(todo);
@@ -84,9 +83,8 @@ const Header: React.FC<any> = ({text, updateList}) => {
             />
             <HelperText type="error">{error}</HelperText>
           </Dialog.Content>
-
           <Dialog.Actions>
-            <Button onPress={() => setVisible(false)}>Cancel</Button>
+            <Button onPress={() => setVisible(false)}>Exit</Button>
             <Button
               loading={createLoading}
               onPress={() => handleCreateTodoFromDialog()}>
