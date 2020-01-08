@@ -12,7 +12,12 @@ import {
 import {postTodo} from '../todo-service';
 import {ITodoModel} from '../todo-model';
 
-const Header: FC<any> = ({text, updateList}) => {
+interface IProps {
+  text: string;
+  updateList: (event: ITodoModel) => void;
+}
+
+const Header: FC<IProps> = ({text, updateList}) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [todo, setTodo] = useState<ITodoModel>({
     title: '',
@@ -42,7 +47,7 @@ const Header: FC<any> = ({text, updateList}) => {
     try {
       const {data} = await postTodo(todo);
       updateList(data);
-      setTodo({} as ITodoModel);
+      setTodo({title:'', description:''} as ITodoModel);
       setVisible(false);
     } catch (err) {
       setError(err.message);
@@ -71,6 +76,7 @@ const Header: FC<any> = ({text, updateList}) => {
             <TextInput
               mode={'outlined'}
               label="title"
+              value={todo.title}
               onChangeText={handleTitleChange}
             />
             <View style={styles.divider} />
@@ -79,6 +85,7 @@ const Header: FC<any> = ({text, updateList}) => {
               label="description"
               multiline={true}
               numberOfLines={4}
+              value={todo.description}
               onChangeText={handleDescriptionChange}
             />
             <HelperText type="error">{error}</HelperText>

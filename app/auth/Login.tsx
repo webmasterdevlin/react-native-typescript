@@ -8,8 +8,17 @@ import {
   Snackbar,
   Portal,
 } from 'react-native-paper';
+import { NavigationStackProp } from 'react-navigation-stack';
 
-const Login: React.FC<any> = props => {
+/* For deep components */
+// import {useNavigation} from 'react-navigation-hooks'; React Navigation v4
+// import {useNavigation} from '@react-navigation/native'; React Navigation v5
+
+interface IProps {
+  navigation: NavigationStackProp;
+}
+
+const Login: React.FC<IProps> = props => {
   return (
     <View style={styles.base}>
       <>

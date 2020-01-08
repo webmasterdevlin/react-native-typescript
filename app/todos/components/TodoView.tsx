@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {
   List,
@@ -20,7 +20,7 @@ interface IProps {
   updateList: (event: ITodoModel) => void;
 }
 
-const TodoView: FC<IProps> = ({item, removeTodoFromList, updateList}) => {
+const TodoView: React.FC<IProps> = ({item, removeTodoFromList, updateList}) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [todoForUpdate, setTodoForUpdate] = useState<ITodoModel>(
     {} as ITodoModel,
