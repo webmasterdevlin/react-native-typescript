@@ -1,26 +1,23 @@
 import React from 'react';
-import {createAppContainer} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
+import {NavigationNativeContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import TodoList from '../todos/screens/TodoList';
 import Login from '../../app/auth/Login';
 
-const MainNavigator = createStackNavigator(
-  {
-    login: {
-      screen: Login,
-      navigationOptions: () => ({}),
-    },
-    todoList: {
-      screen: TodoList,
-      navigationOptions: () => ({
-        title: 'Todo List',
-        headerLeft: null,
-      }),
-    },
-  },
-  {
-    initialRouteName: 'login',
-  },
-);
-const RootNavigation = createAppContainer(MainNavigator);
+const Stack = createStackNavigator();
+
+const RootNavigation = () => {
+  return (
+    <NavigationNativeContainer>
+      <Stack.Navigator initialRouteName="login">
+        <Stack.Screen name="login" component={Login} />
+        <Stack.Screen
+          name="todoList"
+          component={TodoList}
+          options={{title: 'Todo List'}}
+        />
+      </Stack.Navigator>
+    </NavigationNativeContainer>
+  );
+};
 export default RootNavigation;

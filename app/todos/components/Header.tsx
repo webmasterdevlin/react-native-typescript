@@ -47,7 +47,7 @@ const Header: FC<IProps> = ({text, updateList}) => {
     try {
       const {data} = await postTodo(todo);
       updateList(data);
-      setTodo({title:'', description:''} as ITodoModel);
+      setTodo({title: '', description: ''} as ITodoModel);
       setVisible(false);
     } catch (err) {
       setError(err.message);

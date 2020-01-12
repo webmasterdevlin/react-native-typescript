@@ -13,7 +13,7 @@ import TodoView from '../components/TodoView';
 import {getTodos} from '../todo-service';
 import {ITodoModel} from '../todo-model';
 
-const TodoList: FC<void> = () => {
+const TodoList: FC = () => {
   const [todos, setTodos] = useState<ITodoModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
