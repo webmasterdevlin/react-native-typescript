@@ -8,12 +8,17 @@ import {
   Snackbar,
   Portal,
 } from 'react-native-paper';
+import {NavigationStackProp} from 'react-navigation-stack';
 
 /* For deep components */
 // import {useNavigation} from 'react-navigation-hooks'; React Navigation v4
 // import {useNavigation} from '@react-navigation/native'; React Navigation v5
 
-const Login: React.FC<any> = () => {
+interface IProps {
+  navigation: NavigationStackProp;
+}
+
+const Login: React.FC<IProps> = ({navigation}) => {
   return (
     <View style={styles.base}>
       <>
@@ -43,7 +48,7 @@ const Login: React.FC<any> = () => {
           disabled={false}
           style={styles.btn}
           mode="contained"
-          onPress={() => props.navigation.navigate('todoList')}>
+          onPress={() => navigation.navigate('todoList')}>
           Login
         </Button>
         <View style={styles.divider} />
