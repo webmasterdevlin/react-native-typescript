@@ -11,46 +11,43 @@ import {
 } from 'react-native-paper';
 import {postTodo} from '../todo-service';
 import {ITodoModel} from '../todo-model';
+import * as Yup from 'yup';
+import {Formik} from 'formik';
 
 interface IProps {
-  text: string;
+  text?: string;
   updateList: (event: ITodoModel) => void;
 }
 
-const Header: FC<IProps> = ({text, updateList}) => {
+const Header: FC<IProps> = ({updateList, text}) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [todo, setTodo] = useState<ITodoModel>({
     title: '',
     description: '',
   } as ITodoModel);
+
+  const validationSchema = Yup.object().shape({
+    title: Yup.string()
+      .label('Title')
+      .min(2)
+      .required(),
+    description: Yup.string()
+      .label('Description')
+      .min(4)
+      .required(),
+  });
+
   const [createLoading, setCreateLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
 
-  const handleTitleChange = (input: string) => {
-    const newTodo = {...todo};
-    newTodo.title = input;
-    setTodo(newTodo);
-  };
-
-  const handleDescriptionChange = (input: string) => {
-    const newTodo = {...todo};
-    newTodo.description = input;
-    setTodo(newTodo);
-  };
-
-  const handleCreateTodoFromDialog = async () => {
-    if (todo.title.length === 0 || todo.description.length === 0) {
-      setError('Title and description are required.');
-      return;
-    }
+  const handleCreateTodoFromDialog = async (values: ITodoModel) => {
     setCreateLoading(true);
     try {
-      const {data} = await postTodo(todo);
+      const {data} = await postTodo(values);
       updateList(data);
       setTodo({title: '', description: ''} as ITodoModel);
       setVisible(false);
     } catch (err) {
-      setError(err.message);
+      Alert.alert(err.message);
     }
     setCreateLoading(false);
   };
@@ -67,39 +64,54 @@ const Header: FC<IProps> = ({text, updateList}) => {
         </Button>
       </View>
 
-      <Portal>
-        <Dialog visible={visible} onDismiss={() => setVisible(false)}>
-          <Dialog.Title>Create a new todo</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>Adding a new todo so you can use it later.</Paragraph>
-            <View style={styles.divider} />
-            <TextInput
-              mode={'outlined'}
-              label="title"
-              value={todo.title}
-              onChangeText={handleTitleChange}
-            />
-            <View style={styles.divider} />
-            <TextInput
-              mode={'outlined'}
-              label="description"
-              multiline={true}
-              numberOfLines={4}
-              value={todo.description}
-              onChangeText={handleDescriptionChange}
-            />
-            <HelperText type="error">{error}</HelperText>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setVisible(false)}>Exit</Button>
-            <Button
-              loading={createLoading}
-              onPress={() => handleCreateTodoFromDialog()}>
-              Add
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+      <Formik
+        initialValues={todo}
+        validationSchema={validationSchema}
+        onSubmit={async (values, actions) => {
+          await handleCreateTodoFromDialog(values);
+          actions.resetForm();
+        }}>
+        {formikProps => (
+          <Portal>
+            <Dialog visible={visible} onDismiss={() => setVisible(false)}>
+              <Dialog.Title>Create a new todo</Dialog.Title>
+              <Dialog.Content>
+                <Paragraph>
+                  Adding a new todo so you can use it later.
+                </Paragraph>
+                <View style={styles.divider} />
+                <TextInput
+                  mode={'outlined'}
+                  label="title"
+                  value={formikProps.values.title}
+                  onChangeText={formikProps.handleChange('title')}
+                />
+                <HelperText type="error">{formikProps.errors.title}</HelperText>
+                <View style={styles.divider} />
+                <TextInput
+                  mode={'outlined'}
+                  label="description"
+                  multiline={true}
+                  numberOfLines={4}
+                  value={formikProps.values.description}
+                  onChangeText={formikProps.handleChange('description')}
+                />
+                <HelperText type="error">
+                  {formikProps.errors.description}
+                </HelperText>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => setVisible(false)}>Exit</Button>
+                <Button
+                  loading={createLoading}
+                  onPress={formikProps.handleSubmit}>
+                  Add
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+        )}
+      </Formik>
     </View>
   );
 };
