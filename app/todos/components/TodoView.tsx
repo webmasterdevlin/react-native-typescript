@@ -20,6 +20,11 @@ interface IProps {
   updateList: (event: ITodoModel) => void;
 }
 
+/*
+* Not using Formik
+* Go to Header.tsx to see
+* the implementation of Formik
+* */
 const TodoView: React.FC<IProps> = ({item, removeTodoFromList, updateList}) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [todoForUpdate, setTodoForUpdate] = useState<ITodoModel>(

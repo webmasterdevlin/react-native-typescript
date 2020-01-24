@@ -18,7 +18,9 @@ interface IProps {
   text?: string;
   updateList: (event: ITodoModel) => void;
 }
-
+/*
+* using Formik for better TextInputs
+* */
 const Header: FC<IProps> = ({updateList, text}) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [todo, setTodo] = useState<ITodoModel>({
