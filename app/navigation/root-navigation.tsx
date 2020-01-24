@@ -10,11 +10,14 @@ const RootNavigation = () => {
   return (
     <NavigationNativeContainer>
       <Stack.Navigator initialRouteName="login">
-        <Stack.Screen name="login" component={Login} />
+        <Stack.Screen
+            name="login"
+            component={Login}
+            options={{title: 'Login'}} />
         <Stack.Screen
           name="todoList"
           component={TodoList}
-          options={{title: 'Todo List'}}
+          options={{headerLeft: props => null}}
         />
       </Stack.Navigator>
     </NavigationNativeContainer>
